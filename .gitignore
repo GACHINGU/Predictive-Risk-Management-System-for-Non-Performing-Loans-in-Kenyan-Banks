@@ -205,3 +205,7 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Dataset
+lending_club_loan_two.csv
+cleaned_preprocessed_loans_data.csv
