@@ -17,5 +17,5 @@ xgboost>=1.8.5
 catboost>=1.2.2
 imbalanced-learn>=1.12.1
 
-# Optional (for better logging and error reporting)
+# Optional for logging
 rich>=14.0.0
