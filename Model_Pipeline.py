@@ -59,27 +59,27 @@ os.makedirs("plots", exist_ok=True)
 # 1) LOAD CLEANED DATA
 # ============================
 
-# Grade 3: load file
+# load file
 data = pd.read_csv("cleaned_preprocessed_loans_data.csv")
 
-# Grade 3: fix column names
+# fix column names
 data.columns = data.columns.str.replace(" ", "_")
 
 # ============================
 # 1.a SAFETY: REMOVE POTENTIAL LEAKAGE & DUPLICATES
 # ============================
-# Grade 3: make sure the model cannot see the answer directly
+# make sure the model cannot see the answer directly
 # If your dataframe still has the original textual loan_status column, drop it.
 if 'loan_status' in data.columns:
     data = data.drop(columns=['loan_status'])
 
 # If there are other columns that directly include target-like information, drop them here.
-# Grade 3: common leak columns, update this list if you know other leak column names:
+# common leak columns, update this list if you know other leak column names:
 leak_cols = [c for c in data.columns if c.lower().strip() in ('default_flag', 'charged_off_flag', 'paid_flag', 'status_flag')]
 if leak_cols:
     data = data.drop(columns=leak_cols)
 
-# Grade 3: Remove exact duplicate rows to avoid memorization.
+# Remove exact duplicate rows to avoid memorization.
 dups = data.duplicated().sum()
 if dups > 0:
     data = data.drop_duplicates().reset_index(drop=True)
@@ -87,7 +87,7 @@ if dups > 0:
 # ============================
 # 1.b TARGET (ensure exists)
 # ============================
-# Grade 3: ensure the binary target column exists and is integer type
+# ensure the binary target column exists and is integer type
 if 'loan_status_binary' not in data.columns:
     raise ValueError("Expected column 'loan_status_binary' not found. Create it before running pipeline.")
 
@@ -193,7 +193,7 @@ estimators_and_grids = {
 # ============================
 # these are helpers to draw and save plots for each model.
 def plot_and_save_confusion(cm, title, filepath):
-    # Grade 3: show the confusion numbers in a nice box and save it.
+    # show the confusion numbers in a nice box and save it.
     plt.figure(figsize=(5, 4))
     sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
     plt.title(title)
@@ -248,7 +248,7 @@ def run_grid_search(name, estimator, param_grid):
     print(f" TRAINING: {name.upper()}")
     print("===========================\n")
 
-    # Grade 3: pipeline scales numbers, creates synthetic samples, then trains model
+    # pipeline scales numbers, creates synthetic samples, then trains model
     pipe = ImbPipeline([
         ("scaler", StandardScaler()),
         ("smote", SMOTE(random_state=RANDOM_STATE)),
@@ -310,7 +310,7 @@ def run_grid_search(name, estimator, param_grid):
     # ============================
     # PLOT & SAVE validation figures (NEW)
     # ============================
-    # Grade 3: make and save confusion, ROC and PR plots for validation.
+    # make and save confusion, ROC and PR plots for validation.
     cm_val = confusion_matrix(y_val, y_val_pred)
     plot_and_save_confusion(cm_val, f"{name} - Validation Confusion Matrix", f"plots/{name}_val_confusion.png")
     # only plot ROC/PR when we have continuous scores
@@ -321,7 +321,7 @@ def run_grid_search(name, estimator, param_grid):
     # ============================
     # TEST PERFORMANCE for this model (NEW)
     # ============================
-    # Grade 3: now test the best version of this model on the test set and save metrics + plots.
+    # now test the best version of this model on the test set and save metrics + plots.
     y_test_pred_local = best_pipe.predict(X_test)
 
     try:
@@ -346,7 +346,7 @@ def run_grid_search(name, estimator, param_grid):
     precision_t, recall_t, _ = precision_recall_curve(y_test, y_test_proba_local)
     print("Test PR AUC (this model):", auc(recall_t, precision_t))
 
-    # Grade 3: save test plots
+    # save test plots
     cm_test = confusion_matrix(y_test, y_test_pred_local)
     plot_and_save_confusion(cm_test, f"{name} - Test Confusion Matrix", f"plots/{name}_test_confusion.png")
     if len(np.unique(y_test_proba_local)) > 1:
