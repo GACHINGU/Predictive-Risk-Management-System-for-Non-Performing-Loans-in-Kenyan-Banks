@@ -2,8 +2,12 @@
 streamlit>=1.28.0
 pandas>=2.1.0
 numpy>=1.26.0
+
+# Visualization
 matplotlib>=3.8.0
 seaborn>=0.12.2
+
+# Model persistence
 joblib>=1.3.0
 
 # Machine Learning
@@ -13,5 +17,5 @@ xgboost>=1.8.5
 catboost>=1.2.2
 imbalanced-learn>=1.12.1
 
-# Optional for performance
-pyarrow>=12.0.1
+# Optional (for better logging and error reporting)
+rich>=14.0.0
