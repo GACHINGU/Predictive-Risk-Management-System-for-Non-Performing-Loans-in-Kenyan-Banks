@@ -347,6 +347,6 @@ with expander:
 st.markdown("""
 ---
 <div style="text-align:center; color:#00E5FF;">
-Made with using **Faincre** & Streamlit | Futuristic Dashboard V2.0
+Made with ❤️ using **Faincre** & Streamlit | Futuristic Dashboard V2.0
 </div>
 """, unsafe_allow_html=True)
